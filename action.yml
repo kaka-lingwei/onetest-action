@@ -1,16 +1,20 @@
 # action.yml
-name: 'Hello World'
-description: 'Greet someone and record the time'
+name: 'OneTest Action'
+description: ''
 inputs:
-  who-to-greet:  # id of input
-    description: 'Who to greet'
+  ask-config:  # id of input
+    description: 'ask config'
     required: true
-    default: 'World'
+    default: ''
+  version: # id of input
+      description: 'test version'
+      required: true
+      default: ''
 outputs:
-  time: # id of output
-    description: 'The time we greeted you'
+  pods: # id of output
+    description: 'All pods'
 runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - ${{ inputs.who-to-greet }}
+    - ${{ inputs.ask-config }}
