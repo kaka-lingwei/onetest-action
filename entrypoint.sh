@@ -3,8 +3,8 @@
 echo "Start test version: $2"
 
 mkdir -p ${HOME}/.kube
-echo $1 > ${HOME}/.kube/config
-cat ${HOME}/.kube/config
+kube_config=$(echo $1 | base64 -d)
+echo $kube_config > ${HOME}/.kube/config
 export KUBECONFIG="${HOME}/.kube/config"
 
 wget https://gosspublic.alicdn.com/ossutil/1.7.14/ossutil64
