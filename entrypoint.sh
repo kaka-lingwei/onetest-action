@@ -2,6 +2,7 @@
 
 echo "Start test version: $2"
 
+mkdir -p ${HOME}/.kube
 echo $1 > ${HOME}/.kube/config
 
 pods=$(kubectl get pods -n a)
