@@ -7,7 +7,15 @@ inputs:
     required: true
     default: ''
   version: # id of input
-      description: 'test version'
+    description: 'test version'
+    required: true
+    default: ''
+  oss-ak: # id of input
+      description: 'oss ak'
+      required: true
+      default: ''
+  oss-sk: # id of input
+      description: 'oss sk'
       required: true
       default: ''
 outputs:
@@ -18,3 +26,6 @@ runs:
   image: 'Dockerfile'
   args:
     - ${{ inputs.ask-config }}
+    - ${{ inputs.version }}
+    - ${{ inputs.oss-ak }}
+    - ${{ inputs.oss-sk }}
