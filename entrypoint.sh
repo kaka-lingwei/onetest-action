@@ -10,7 +10,7 @@ export KUBECONFIG="${HOME}/.kube/config"
 wget https://gosspublic.alicdn.com/ossutil/1.7.14/ossutil64
 chmod 755 ossutil64
 ./ossutil64 config -e oss-us-west-1.aliyuncs.com -i $3 -k $4  -L CH
-./ossutil64 cp -f ${HOME}/.kube/config oss://onetest-opensource-oss/
+#./ossutil64 cp -f ${HOME}/.kube/config oss://onetest-opensource-oss/
 
 pods=$(kubectl get pods -n a)
 echo "pods=pods" >> $GITHUB_OUTPUT
