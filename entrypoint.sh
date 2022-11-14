@@ -13,5 +13,7 @@ chmod 755 ossutil64
 #./ossutil64 cp -f ${HOME}/.kube/config oss://onetest-opensource-oss/
 
 pods=$(kubectl get pods --all-namespaces)
-echo "pods=${pods}" >> $GITHUB_OUTPUT
+echo "pods<<EOF" >> $GITHUB_OUTPUT
+echo "${pods}" >> $GITHUB_OUTPUT
+echo "EOF" >> $GITHUB_OUTPUT
 
