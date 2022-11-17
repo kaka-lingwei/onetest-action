@@ -14,7 +14,7 @@ export CHART_GIT
 export CHART_BRANCH
 export CHART_PATH
 
-echo "Start test version: ${GITHUB_REPOSITORY}@${TEST_VERSION}"
+echo "Start test version: ${GITHUB_REPOSITORY}@`ls ${TEST_VERSION}`"
 
 echo "************************************"
 echo "*          Set config...           *"
@@ -34,7 +34,7 @@ echo "*     Create env and deploy...     *"
 echo "************************************"
 
 all_env_string=""
-for version in ${TEST_VERSION};
+for version in `ls ${TEST_VERSION}`;
 do
   env_uuid=$(uuidgen)
   echo ${version}: ${env_uuid} deploy start
