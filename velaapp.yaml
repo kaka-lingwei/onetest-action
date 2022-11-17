@@ -1,0 +1,23 @@
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: ${VELA_APP_NAME}
+spec:
+  components:
+    - name: ${VELA_APP_NAME}
+      type: helm
+      properties:
+        chart: ${CHART_PATH}
+        git:
+          branch: ${CHART_BRANCH}
+        repoType: git
+        retries: 3
+        secretRef: ''
+        url: ${CHART_GIT}
+        values:
+          nameserver:
+            image:
+              tag: ${VERSION}
+          broker:
+            image:
+              tag: ${VERSION}
