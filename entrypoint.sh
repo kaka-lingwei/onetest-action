@@ -66,7 +66,7 @@ echo "************************************"
 all_env_string=""
 for version in ${TEST_VERSION};
 do
-  env_uuid=$(uuidgen)
+  env_uuid=${REPO_NAME}-${GITHUB_WORKFLOW}-${GITHUB_RUN_ID}
   echo ${version}: ${env_uuid} deploy start
 
   vela env init ${env_uuid} --namespace ${env_uuid}
