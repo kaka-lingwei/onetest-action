@@ -36,7 +36,7 @@ VELA_APP_TEMPLATE='
 apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
-  name: ${REPO_NAME}
+  name: ${VELA_APP_NAME}
   description: ${REPO_NAME}-${WORKFLOW_NAME}-${RUN_ID}@${VERSION}
 spec:
   components:
@@ -81,6 +81,7 @@ do
     --docker-password=${DOCKER_REPO_PASSWORD}
 
   export VERSION=${version}
+  export VELA_APP_NAME=${REPO_NAME}-${index}
   envsubst < ./velaapp.yaml > velaapp-${REPO_NAME}.yaml
   cat velaapp-${REPO_NAME}.yaml
 
