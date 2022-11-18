@@ -78,6 +78,8 @@ do
   export VERSION=${version}
   export VELA_APP_NAME=${GITHUB_REPOSITORY#*/}-${env_uuid}
   envsubst < ./velaapp.yaml > velaapp-${VELA_APP_NAME}.yaml
+  cat velaapp-${VELA_APP_NAME}.yaml
+
   vela env set ${env_uuid}
   vela up -f "velaapp-${VELA_APP_NAME}.yaml"
 done
