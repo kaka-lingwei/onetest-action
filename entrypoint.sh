@@ -13,7 +13,7 @@ CHART_PATH=$9
 export CHART_GIT
 export CHART_BRANCH
 export CHART_PATH
-export REPO_NAME=`echo ${GITHUB_REPOSITORY} | sed -e "s/\//-/g" | cut -c1-36`
+export REPO_NAME=`echo ${GITHUB_REPOSITORY,,} | sed -e "s/\//-/g" | cut -c1-36`
 
 echo "Start test version: ${GITHUB_REPOSITORY}@${TEST_VERSION}"
 
@@ -66,7 +66,7 @@ echo "************************************"
 all_env_string=""
 for version in ${TEST_VERSION};
 do
-  env_uuid=${REPO_NAME}-${GITHUB_WORKFLOW}-${GITHUB_RUN_ID}
+  env_uuid=${REPO_NAME}-${GITHUB_WORKFLOW,,}-${GITHUB_RUN_ID}
   echo ${version}: ${env_uuid} deploy start
 
   vela env init ${env_uuid} --namespace ${env_uuid}
