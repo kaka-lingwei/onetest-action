@@ -29,29 +29,30 @@ chmod 755 ossutil64
 ./ossutil64 config -e oss-us-west-1.aliyuncs.com -i $OSS_AK -k $OSS_SK  -L CH
 #./ossutil64 cp -f ${HOME}/.kube/config oss://onetest-opensource-oss/
 
-VELA_APP_TEMPLATE='apiVersion: core.oam.dev/v1beta1
-                   kind: Application
-                   metadata:
-                     name: ${VELA_APP_NAME}
-                   spec:
-                     components:
-                       - name: ${VELA_APP_NAME}
-                         type: helm
-                         properties:
-                           chart: ${CHART_PATH}
-                           git:
-                             branch: ${CHART_BRANCH}
-                           repoType: git
-                           retries: 3
-                           secretRef: ""
-                           url: ${CHART_GIT}
-                           values:
-                             nameserver:
-                               image:
-                                 tag: ${VERSION}
-                             broker:
-                               image:
-                                 tag: ${VERSION}'
+VELA_APP_TEMPLATE='\
+apiVersion: core.oam.dev/v1beta1
+kind: Application
+metadata:
+  name: ${VELA_APP_NAME}
+spec:
+  components:
+    - name: ${VELA_APP_NAME}
+      type: helm
+      properties:
+        chart: ${CHART_PATH}
+        git:
+          branch: ${CHART_BRANCH}
+        repoType: git
+        retries: 3
+        secretRef: ''
+        url: ${CHART_GIT}
+        values:
+          nameserver:
+            image:
+              tag: ${VERSION}
+          broker:
+            image:
+              tag: ${VERSION}'
 
 echo $VELA_APP_TEMPLATE > ./velaapp.yaml
 
@@ -64,6 +65,8 @@ for version in ${TEST_VERSION};
 do
   env_uuid=$(uuidgen)
   echo ${version}: ${env_uuid} deploy start
+  echo APP_NAME: ${GITHUB_REPOSITORY#*/}-${env_uuid}
+
   vela env init ${env_uuid} --namespace ${env_uuid}
   all_env_string="${all_env_string} ${env_uuid}"
 
@@ -73,7 +76,7 @@ do
     --docker-password=${DOCKER_REPO_PASSWORD}
 
   export VERSION=${version}
-  export VELA_APP_NAME=${GITHUB_REPOSITORY#*/}@${version}
+  export VELA_APP_NAME=${GITHUB_REPOSITORY#*/}-${env_uuid}
   envsubst < ./velaapp.yaml > velaapp-${VELA_APP_NAME}.yaml
   vela env set ${env_uuid}
   vela up -f "velaapp-${VELA_APP_NAME}.yaml"
@@ -82,14 +85,15 @@ done
 #sleep 300
 #
 #echo "************************************"
-#echo "*          Delete env...           *"
+#echo "*       Delete app and env...      *"
 #echo "************************************"
 #
 #for env in all_env_string;
 #do
 #  DELETE_ENV=${env}
 #
-#  vela env delete ${DELETE_ENV}
+#  vela delete ${VELA_APP_NAME} -n ${env} -y
+#  vela env delete ${DELETE_ENV} -y
 #  kubectl delete namespace ${DELETE_ENV} --wait=false
 #  kubectl get ns ${DELETE_ENV} -o json | jq '.spec.finalizers=[]' > ns-without-finalizers.json
 #  cat ns-without-finalizers.json
