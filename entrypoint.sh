@@ -78,7 +78,7 @@ do
     --docker-password=${DOCKER_REPO_PASSWORD}
 
   export VERSION=${version}
-  export VELA_APP_NAME=${GITHUB_REPOSITORY#*/}-${env_uuid}
+  export VELA_APP_NAME=${REPO_NAME}
   envsubst < ./velaapp.yaml > velaapp-${VELA_APP_NAME}.yaml
   cat velaapp-${VELA_APP_NAME}.yaml
 
