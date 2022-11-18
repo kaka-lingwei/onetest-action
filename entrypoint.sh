@@ -68,7 +68,6 @@ for version in ${TEST_VERSION};
 do
   env_uuid=$(uuidgen)
   echo ${version}: ${env_uuid} deploy start
-  echo APP_NAME: ${GITHUB_REPOSITORY#*/}-${env_uuid}
 
   vela env init ${env_uuid} --namespace ${env_uuid}
   all_env_string="${all_env_string} ${env_uuid}"
