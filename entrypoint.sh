@@ -54,7 +54,7 @@ spec:
             image:
               tag: ${VERSION}'
 
-echo -e $VELA_APP_TEMPLATE > ./velaapp.yaml
+echo -e "${VELA_APP_TEMPLATE}" > ./velaapp.yaml
 sed -i '1d' ./velaapp.yaml
 
 echo "************************************"
