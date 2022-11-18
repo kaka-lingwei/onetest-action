@@ -29,30 +29,30 @@ chmod 755 ossutil64
 ./ossutil64 config -e oss-us-west-1.aliyuncs.com -i $OSS_AK -k $OSS_SK  -L CH
 #./ossutil64 cp -f ${HOME}/.kube/config oss://onetest-opensource-oss/
 
-VELA_APP_TEMPLATE="
+VELA_APP_TEMPLATE='
 apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
-  name: '${VELA_APP_NAME}'
+  name: ${VELA_APP_NAME}
 spec:
   components:
-    - name: '${VELA_APP_NAME}'
+    - name: ${VELA_APP_NAME}
       type: helm
       properties:
-        chart: '${CHART_PATH}'
+        chart: ${CHART_PATH}
         git:
-          branch: '${CHART_BRANCH}'
+          branch: ${CHART_BRANCH}
         repoType: git
         retries: 3
         secretRef: \047\047
-        url: '${CHART_GIT}'
+        url: ${CHART_GIT}
         values:
           nameserver:
             image:
-              tag: '${VERSION}'
+              tag: ${VERSION}
           broker:
             image:
-              tag: '${VERSION}'"
+              tag: ${VERSION}'
 
 echo -e $VELA_APP_TEMPLATE > ./velaapp.yaml
 sed -i '1d' ./velaapp.yaml
