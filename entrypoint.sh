@@ -13,6 +13,7 @@ CHART_PATH=$9
 export CHART_GIT
 export CHART_BRANCH
 export CHART_PATH
+export REPO_NAME=`echo ${GITHUB_REPOSITORY} | sed -e "s/\//-/g" | cut -c1-63`
 
 echo "Start test version: ${GITHUB_REPOSITORY}@${TEST_VERSION}"
 
@@ -34,10 +35,10 @@ apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
   name: ${VELA_APP_NAME}
-  description: ${GITHUB_REPOSITORY#*/}@${VERSION}
+  description: ${REPO_NAME}@${VERSION}
 spec:
   components:
-    - name: ${GITHUB_REPOSITORY#*/}
+    - name: ${REPO_NAME}
       type: helm
       properties:
         chart: ${CHART_PATH}
