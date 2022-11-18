@@ -14,6 +14,8 @@ export CHART_GIT
 export CHART_BRANCH
 export CHART_PATH
 export REPO_NAME=`echo ${GITHUB_REPOSITORY} | sed -e "s/\//-/g" | cut -c1-36 | tr '[A-Z]' '[a-z]'`
+export WORKFLOW_NAME=${GITHUB_WORKFLOW}
+export RUN_ID=${GITHUB_RUN_ID}
 
 echo "Start test version: ${GITHUB_REPOSITORY}@${TEST_VERSION}"
 
@@ -34,8 +36,8 @@ VELA_APP_TEMPLATE='
 apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
-  name: ${VELA_APP_NAME}
-  description: ${REPO_NAME}@${VERSION}
+  name: ${REPO_NAME}
+  description: ${REPO_NAME}-${WORKFLOW_NAME}-${RUN_ID}@${VERSION}
 spec:
   components:
     - name: ${REPO_NAME}
@@ -63,10 +65,11 @@ echo "************************************"
 echo "*     Create env and deploy...     *"
 echo "************************************"
 
+let index=0
 all_env_string=""
 for version in ${TEST_VERSION};
 do
-  env_uuid=${REPO_NAME}-`echo ${GITHUB_WORKFLOW} | tr '[A-Z]' '[a-z]'`-${GITHUB_RUN_ID}
+  env_uuid=${REPO_NAME}-${GITHUB_RUN_ID}-${index}
   echo ${version}: ${env_uuid} deploy start
 
   vela env init ${env_uuid} --namespace ${env_uuid}
@@ -78,12 +81,12 @@ do
     --docker-password=${DOCKER_REPO_PASSWORD}
 
   export VERSION=${version}
-  export VELA_APP_NAME=${REPO_NAME}
-  envsubst < ./velaapp.yaml > velaapp-${VELA_APP_NAME}.yaml
-  cat velaapp-${VELA_APP_NAME}.yaml
+  envsubst < ./velaapp.yaml > velaapp-${REPO_NAME}.yaml
+  cat velaapp-${REPO_NAME}.yaml
 
   vela env set ${env_uuid}
-  vela up -f "velaapp-${VELA_APP_NAME}.yaml"
+  vela up -f "velaapp-${REPO_NAME}.yaml"
+  index+=1
 done
 
 #sleep 300
