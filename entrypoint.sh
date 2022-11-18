@@ -86,7 +86,7 @@ do
 
   vela env set ${env_uuid}
   vela up -f "velaapp-${REPO_NAME}.yaml"
-  index+=1
+  index=${index}+1
 done
 
 #sleep 300
