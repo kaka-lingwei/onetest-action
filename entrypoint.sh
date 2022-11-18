@@ -34,6 +34,7 @@ apiVersion: core.oam.dev/v1beta1
 kind: Application
 metadata:
   name: ${VELA_APP_NAME}
+  description: ${GITHUB_REPOSITORY#*/}@${VERSION}
 spec:
   components:
     - name: ${GITHUB_REPOSITORY#*/}
