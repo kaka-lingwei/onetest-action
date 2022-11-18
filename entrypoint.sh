@@ -36,7 +36,7 @@ metadata:
   name: ${VELA_APP_NAME}
 spec:
   components:
-    - name: ${VELA_APP_NAME}
+    - name: ${GITHUB_REPOSITORY#*/}
       type: helm
       properties:
         chart: ${CHART_PATH}
