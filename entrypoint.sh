@@ -13,7 +13,7 @@ CHART_PATH=$9
 export CHART_GIT
 export CHART_BRANCH
 export CHART_PATH
-export REPO_NAME=`echo ${GITHUB_REPOSITORY} | sed -e "s/\//-/g" | cut -c1-36 | tr '[A-Z]' '[a-z]'`
+export REPO_NAME=`echo ${GITHUB_REPOSITORY#*/} | sed -e "s/\//-/g" | cut -c1-36 | tr '[A-Z]' '[a-z]'`
 export WORKFLOW_NAME=${GITHUB_WORKFLOW}
 export RUN_ID=${GITHUB_RUN_ID}
 
