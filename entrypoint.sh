@@ -100,12 +100,18 @@ do
   status=`vela status ${app} -n ${app}`
   echo $status
   res=`echo $status | grep "Create helm release successfully"`
+  let count=0
   while [ -z $res ]
   do
+      if [ $count -gt 120 ]; then
+        echo "env ${app} deploy timeout..."
+        exit 1
+      fi
       echo "wait for env ${app} ready..."
       sleep 5
       status=`vela status ${app} -n ${app}`
       res=`echo $status | grep "Create helm release successfully"`
+      let count=${count}+1
   done
 done
 
