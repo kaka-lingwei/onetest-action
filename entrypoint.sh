@@ -68,14 +68,13 @@ echo "*     Create env and deploy...     *"
 echo "************************************"
 
 let index=0
-all_env_string=""
 for version in ${TEST_VERSION};
 do
   env_uuid=${REPO_NAME}-${GITHUB_RUN_ID}-${index}
   echo ${version}: ${env_uuid} deploy start
 
   vela env init ${env_uuid} --namespace ${env_uuid}
-  all_env_string="${all_env_string}'\n'${env_uuid}"
+  all_env_string[index]=${env_uuid}
 
   kubectl create secret --namespace=${env_uuid} docker-registry onetest-regcred \
     --docker-server=cn-cicd-repo-registry.cn-hangzhou.cr.aliyuncs.com \
@@ -92,7 +91,9 @@ do
   let index=${index}+1
 done
 
-for app in `echo -e $all_env_string`;
+echo all_env_string: ${all_env_string[*]
+
+for app in ${all_env_string[*]};
 do
   status=`vela status ${app} -n ${app}`
   echo $status
@@ -104,7 +105,7 @@ do
   fi
 done
 
-for ns in `echo -e $all_env_string`;
+for ns in ${all_env_string[*]};
 do
   all_pod_name=`kubectl get pods --no-headers -o custom-columns=":metadata.name" -n ${ns}`
   ALL_IP=""
