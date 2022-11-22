@@ -191,6 +191,7 @@ do
   DELETE_ENV=${env}
 
   vela delete ${VELA_APP_NAME} -n ${env} -y
+  sleep 30
   vela env delete ${DELETE_ENV} -y
   kubectl delete namespace ${DELETE_ENV} --wait=false
   kubectl get ns ${DELETE_ENV} -o json | jq '.spec.finalizers=[]' > ns-without-finalizers.json
