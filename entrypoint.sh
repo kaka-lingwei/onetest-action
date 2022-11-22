@@ -111,7 +111,7 @@ do
   ALL_IP=""
   for pod in $all_pod_name;
   do
-      POD_HOST=$(kubectl get pod ${pod} --template={{.status.podIP}})
+      POD_HOST=$(kubectl get pod ${pod} --template={{.status.podIP}} -n ${ns})
       ALL_IP=${pod}:${POD_HOST},${ALL_IP}
   done
 
