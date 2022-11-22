@@ -18,6 +18,8 @@ export CHART_PATH
 export REPO_NAME=`echo ${GITHUB_REPOSITORY#*/} | sed -e "s/\//-/g" | cut -c1-36 | tr '[A-Z]' '[a-z]'`
 export WORKFLOW_NAME=${GITHUB_WORKFLOW}
 export RUN_ID=${GITHUB_RUN_ID}
+export TEST_CODE_GIT
+export TEST_CMD
 
 echo "Start test version: ${GITHUB_REPOSITORY}@${TEST_VERSION}"
 
@@ -105,8 +107,34 @@ do
   fi
 done
 
+TEST_POD_TEMPLATE='
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-${ns}
+  namespace: ${ns}
+spec:
+  restartPolicy: Never
+  imagePullSecrets:
+    - name: onetest-regcred
+  containers:
+  - name: test-${ns}
+    image: cn-cicd-repo-registry.cn-hangzhou.cr.aliyuncs.com/cicd/test-runner:v0.0.1
+    env:
+    - name: CODE
+      value: ${TEST_CODE_GIT}
+    - name: CMD
+      value: ${TEST_CMD}
+    - name: ALL_IP
+      value: ${ALL_IP}
+'
+
+echo -e "${TEST_POD_TEMPLATE}" > ./testpod.yaml
+sed -i '1d' ./testpod.yaml
+
 for ns in ${all_env_string[*]};
 do
+  echo namespace: $ns
   all_pod_name=`kubectl get pods --no-headers -o custom-columns=":metadata.name" -n ${ns}`
   ALL_IP=""
   for pod in $all_pod_name;
@@ -119,30 +147,15 @@ do
   echo $TEST_CODE_GIT
   echo $TEST_CMD
 
-  cat <<EOF | kubectl apply -f -
-  # YAML begins
-  apiVersion: v1
-  kind: Pod
-  metadata:
-    name: test-${ns}
-  spec:
-    imagePullSecrets:
-      - name: onetest-regcred
-    containers:
-    - name: test-${ns}
-      image: cn-cicd-repo-registry.cn-hangzhou.cr.aliyuncs.com/cicd/test-runner:v0.0.1
-      env:
-      - name: CODE
-        value: ${TEST_CODE_GIT}
-      - name: CMD
-        value: ${TEST_CMD}
-      - name: ALL_IP
-        value: ${ALL_IP}
-  # YAML ends
-  EOF
+  export ALL_IP
+  export ns
+  envsubst < ./testpod.yaml > ./testpod-${ns}.yaml
+  cat ./testpod-${ns}.yaml
 
-  kubectl logs -f -c test-${ns}
-  kubectl delete pod test-${ns}
+  kubectl apply -f ./testpod-${ns}.yaml
+  sleep 5
+  kubectl logs -f -c test-${ns} -n ${ns}
+  kubectl delete pod test-${ns} -n ${ns}
 
 done
 
