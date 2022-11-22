@@ -100,11 +100,12 @@ do
   status=`vela status ${app} -n ${app}`
   echo $status
   res=`echo $status | grep "Create helm release successfully"`
-  if [ -z $res ]; then
-      sleep 5
+  while [ -z $res ]
+  do
       echo "wait for env ${app} ready..."
-      continue
-  fi
+      sleep 5
+      res=`echo $status | grep "Create helm release successfully"`
+  done
 done
 
 TEST_POD_TEMPLATE='
@@ -154,7 +155,16 @@ do
 
   kubectl apply -f ./testpod-${ns}.yaml
   sleep 5
-  kubectl logs -f test-${ns} -n ${ns}
+  pod_status=`kubectl get pod test-${ns} --template={{.status.phase}} -n ${ns}`
+
+  while [ ${pod_status} == "Pending" ] || [ ${pod_status} == "Running" ]
+  do
+      echo wait for test-${ns} test done...
+      sleep 5
+      pod_status=`kubectl get pod test-${ns} --template={{.status.phase}} -n ${ns}`
+  done
+
+  kubectl logs test-${ns} -n ${ns}
   kubectl delete pod test-${ns} -n ${ns}
 
 done
