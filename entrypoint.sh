@@ -110,6 +110,11 @@ do
       echo "wait for env ${app} ready..."
       sleep 5
       status=`vela status ${app} -n ${app}`
+      stopped=`echo $status | grep "not found"`
+      if [ ! -z $stopped ]; then
+          echo "env ${app} deploy stopped..."
+          exit 1
+      fi
       res=`echo $status | grep "Create helm release successfully"`
       let count=${count}+1
   done
