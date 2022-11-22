@@ -154,7 +154,7 @@ do
 
   kubectl apply -f ./testpod-${ns}.yaml
   sleep 5
-  kubectl logs -f -c test-${ns} -n ${ns}
+  kubectl logs -f test-${ns} -n ${ns}
   kubectl delete pod test-${ns} -n ${ns}
 
 done
