@@ -104,6 +104,7 @@ do
   do
       echo "wait for env ${app} ready..."
       sleep 5
+      status=`vela status ${app} -n ${app}`
       res=`echo $status | grep "Create helm release successfully"`
   done
 done
