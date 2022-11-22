@@ -96,10 +96,10 @@ for app in $all_env_string;
 do
   status=`vela status ${app} -n ${app}`
   echo $status
-  res=echo $status | grep "Create helm release successfully"
+  res=`echo $status | grep "Create helm release successfully"`
   if [ -z $res ]; then
       sleep 5
-      echo wait for env ${app} ready...
+      echo "wait for env ${app} ready..."
       continue
   fi
 done
