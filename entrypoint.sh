@@ -92,7 +92,7 @@ do
   let index=${index}+1
 done
 
-for app in all_env_string;
+for app in $all_env_string;
 do
   status=`vela status ${app} -n ${app}`
   echo $status
@@ -104,11 +104,11 @@ do
   fi
 done
 
-for ns in all_env_string;
+for ns in $all_env_string;
 do
   all_pod_name=`kubectl get pods --no-headers -o custom-columns=":metadata.name" -n ${ns}`
   ALL_IP=""
-  for pod in all_pod_name;
+  for pod in $all_pod_name;
   do
       POD_HOST=$(kubectl get pod ${pod} --template={{.status.podIP}})
       ALL_IP=${pod}:${POD_HOST},${ALL_IP}
