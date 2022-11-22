@@ -38,6 +38,14 @@ inputs:
     description: 'chart path'
     required: false
     default: './'
+  test-code-git: # id of input
+    description: 'test code git'
+    required: true
+    default: ''
+  test-cmd: # id of input
+    description: 'test cmd'
+    required: false
+    default: 'mvn -B test'
 #outputs:
 #  pods: # id of output
 #    description: 'All pods'
@@ -54,3 +62,5 @@ runs:
     - ${{ inputs.chart-git }}
     - ${{ inputs.chart-branch }}
     - ${{ inputs.chart-path }}
+    - ${{ inputs.test-code-git }}
+    - ${{ inputs.test-cmd }}

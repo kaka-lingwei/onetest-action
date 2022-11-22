@@ -9,6 +9,8 @@ DOCKER_REPO_PASSWORD=$6
 CHART_GIT=$7
 CHART_BRANCH=$8
 CHART_PATH=$9
+TEST_CODE_GIT=$10
+TEST_CMD=$11
 
 export CHART_GIT
 export CHART_BRANCH
@@ -81,7 +83,7 @@ do
     --docker-password=${DOCKER_REPO_PASSWORD}
 
   export VERSION=${version}
-  export VELA_APP_NAME=${REPO_NAME}-${GITHUB_RUN_ID}-${index}
+  export VELA_APP_NAME=${env_uuid}
   envsubst < ./velaapp.yaml > velaapp-${REPO_NAME}.yaml
   cat velaapp-${REPO_NAME}.yaml
 
@@ -90,8 +92,60 @@ do
   let index=${index}+1
 done
 
-#sleep 300
+for app in all_env_string;
+do
+  status=`vela status ${app} -n ${app}`
+  echo $status
+  res=echo $status | grep "Create helm release successfully"
+  if [ -z $res ]; then
+      sleep 5
+      echo wait for env ${app} ready...
+      continue
+  fi
+done
+
+for ns in all_env_string;
+do
+  all_pod_name=`kubectl get pods --no-headers -o custom-columns=":metadata.name" -n ${ns}`
+  ALL_IP=""
+  for pod in all_pod_name;
+  do
+      POD_HOST=$(kubectl get pod ${pod} --template={{.status.podIP}})
+      ALL_IP=${pod}:${POD_HOST},${ALL_IP}
+  done
+
+  echo $ALL_IP
+  echo $TEST_CODE_GIT
+  echo $TEST_CMD
+
+#  cat <<EOF | kubectl apply -f -
+#  # YAML begins
+#  apiVersion: v1
+#  kind: Pod
+#  metadata:
+#    name: test-${ns}
+#  spec:
+#    imagePullSecrets:
+#      - name: onetest-regcred
+#    containers:
+#    - name: test-${ns}
+#      image: cn-cicd-repo-registry.cn-hangzhou.cr.aliyuncs.com/cicd/test-runner:v0.0.1
+#      env:
+#      - name: CODE
+#        value: ${TEST_CODE_GIT}
+#      - name: CMD
+#        value: ${TEST_CMD}
+#      - name: ALL_IP
+#        value: ${ALL_IP}
+#  # YAML ends
+#  EOF
 #
+#  kubectl logs -f -c test-${ns}
+#  kubectl delete pod test-${ns}
+
+done
+
+
 #echo "************************************"
 #echo "*       Delete app and env...      *"
 #echo "************************************"
