@@ -197,6 +197,7 @@ do
   cat ns-without-finalizers.json
   kubectl proxy &
   PID=$!
+  sleep 3
   curl -X PUT http://localhost:8001/api/v1/namespaces/${DELETE_ENV}/finalize -H "Content-Type: application/json" --data-binary @ns-without-finalizers.json
   kill $PID
 done
