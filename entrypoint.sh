@@ -111,7 +111,7 @@ do
       sleep 5
       status=`vela status ${app} -n ${app}`
       stopped=`echo $status | grep "not found"`
-      if [ ! -z $stopped ]; then
+      if [ ! -z "$stopped" ]; then
           echo "env ${app} deploy stopped..."
           exit 1
       fi
@@ -182,24 +182,24 @@ do
 done
 
 
-#echo "************************************"
-#echo "*       Delete app and env...      *"
-#echo "************************************"
-#
-#for env in all_env_string;
-#do
-#  DELETE_ENV=${env}
-#
-#  vela delete ${VELA_APP_NAME} -n ${env} -y
-#  vela env delete ${DELETE_ENV} -y
-#  kubectl delete namespace ${DELETE_ENV} --wait=false
-#  kubectl get ns ${DELETE_ENV} -o json | jq '.spec.finalizers=[]' > ns-without-finalizers.json
-#  cat ns-without-finalizers.json
-#  kubectl proxy &
-#  PID=$!
-#  curl -X PUT http://localhost:8001/api/v1/namespaces/${DELETE_ENV}/finalize -H "Content-Type: application/json" --data-binary @ns-without-finalizers.json
-#  kill $PID
-#done
+echo "************************************"
+echo "*       Delete app and env...      *"
+echo "************************************"
+
+for env in ${all_env_string[*]};
+do
+  DELETE_ENV=${env}
+
+  vela delete ${VELA_APP_NAME} -n ${env} -y
+  vela env delete ${DELETE_ENV} -y
+  kubectl delete namespace ${DELETE_ENV} --wait=false
+  kubectl get ns ${DELETE_ENV} -o json | jq '.spec.finalizers=[]' > ns-without-finalizers.json
+  cat ns-without-finalizers.json
+  kubectl proxy &
+  PID=$!
+  curl -X PUT http://localhost:8001/api/v1/namespaces/${DELETE_ENV}/finalize -H "Content-Type: application/json" --data-binary @ns-without-finalizers.json
+  kill $PID
+done
 
 #pods=$(kubectl get pods --all-namespaces)
 #echo "pods<<EOF" >> $GITHUB_OUTPUT
