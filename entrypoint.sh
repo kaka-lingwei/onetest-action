@@ -188,11 +188,15 @@ echo "************************************"
 
 for env in ${all_env_string[*]};
 do
-  DELETE_ENV=${env}
   vela delete ${VELA_APP_NAME} -n ${env} -y
+  all_pod_name=`kubectl get pods --no-headers -o custom-columns=":metadata.name" -n ${env}`
+  for pod in $all_pod_name;
+  do
+    kubectl delete pod ${pod} -n ${env}
+  done
 done
 
-sleep 60
+sleep 30
 
 for env in ${all_env_string[*]};
 do
