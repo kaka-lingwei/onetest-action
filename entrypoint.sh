@@ -9,8 +9,8 @@ DOCKER_REPO_PASSWORD=$6
 CHART_GIT=$7
 CHART_BRANCH=$8
 CHART_PATH=$9
-TEST_CODE_GIT=$10
-TEST_CMD=$11
+TEST_CODE_GIT=${10}
+TEST_CMD=${11}
 
 export CHART_GIT
 export CHART_BRANCH
@@ -119,30 +119,30 @@ do
   echo $TEST_CODE_GIT
   echo $TEST_CMD
 
-#  cat <<EOF | kubectl apply -f -
-#  # YAML begins
-#  apiVersion: v1
-#  kind: Pod
-#  metadata:
-#    name: test-${ns}
-#  spec:
-#    imagePullSecrets:
-#      - name: onetest-regcred
-#    containers:
-#    - name: test-${ns}
-#      image: cn-cicd-repo-registry.cn-hangzhou.cr.aliyuncs.com/cicd/test-runner:v0.0.1
-#      env:
-#      - name: CODE
-#        value: ${TEST_CODE_GIT}
-#      - name: CMD
-#        value: ${TEST_CMD}
-#      - name: ALL_IP
-#        value: ${ALL_IP}
-#  # YAML ends
-#  EOF
-#
-#  kubectl logs -f -c test-${ns}
-#  kubectl delete pod test-${ns}
+  cat <<EOF | kubectl apply -f -
+  # YAML begins
+  apiVersion: v1
+  kind: Pod
+  metadata:
+    name: test-${ns}
+  spec:
+    imagePullSecrets:
+      - name: onetest-regcred
+    containers:
+    - name: test-${ns}
+      image: cn-cicd-repo-registry.cn-hangzhou.cr.aliyuncs.com/cicd/test-runner:v0.0.1
+      env:
+      - name: CODE
+        value: ${TEST_CODE_GIT}
+      - name: CMD
+        value: ${TEST_CMD}
+      - name: ALL_IP
+        value: ${ALL_IP}
+  # YAML ends
+  EOF
+
+  kubectl logs -f -c test-${ns}
+  kubectl delete pod test-${ns}
 
 done
 
