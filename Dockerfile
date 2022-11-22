@@ -9,6 +9,7 @@ RUN curl -fsSl https://kubevela.net/script/install.sh | bash
 RUN yum install epel-release -y
 RUN yum install gettext -y
 RUN yum install jq -y
+RUN yum install wget -y
 
 # Code file to execute when the docker container starts up (`entrypoint.sh`)
 ENTRYPOINT ["/entrypoint.sh"]
