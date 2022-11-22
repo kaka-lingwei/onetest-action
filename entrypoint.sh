@@ -101,7 +101,7 @@ do
   echo $status
   res=`echo $status | grep "Create helm release successfully"`
   let count=0
-  while [ -z $res ]
+  while [ -z "$res" ]
   do
       if [ $count -gt 120 ]; then
         echo "env ${app} deploy timeout..."
@@ -169,7 +169,7 @@ do
   sleep 5
   pod_status=`kubectl get pod test-${ns} --template={{.status.phase}} -n ${ns}`
 
-  while [ ${pod_status} == "Pending" ] || [ ${pod_status} == "Running" ]
+  while [ "${pod_status}" == "Pending" ] || [ "${pod_status}" == "Running" ]
   do
       echo wait for test-${ns} test done...
       sleep 5
