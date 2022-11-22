@@ -133,6 +133,9 @@ spec:
   containers:
   - name: test-${ns}
     image: cn-cicd-repo-registry.cn-hangzhou.cr.aliyuncs.com/cicd/test-runner:v0.0.1
+    volumeMounts:
+    - name: onetest-store
+      mountPath: /root/.m2
     env:
     - name: CODE
       value: ${TEST_CODE_GIT}
@@ -140,6 +143,10 @@ spec:
       value: ${TEST_CMD}
     - name: ALL_IP
       value: ${ALL_IP}
+  volumes:
+  - name: onetest-store
+    persistentVolumeClaim:
+      claimName: onetest-store
 '
 
 echo -e "${TEST_POD_TEMPLATE}" > ./testpod.yaml
