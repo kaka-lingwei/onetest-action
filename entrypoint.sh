@@ -166,7 +166,12 @@ do
   cat ./testpod-${ns}.yaml
 
   kubectl apply -f ./testpod-${ns}.yaml
-  sleep 5
+
+done
+
+sleep 5
+for ns in ${all_env_string[*]};
+do
   pod_status=`kubectl get pod test-${ns} --template={{.status.phase}} -n ${ns}`
 
   while [ "${pod_status}" == "Pending" ] || [ "${pod_status}" == "Running" ]
@@ -178,7 +183,6 @@ do
 
   kubectl logs test-${ns} -n ${ns}
   kubectl delete pod test-${ns} -n ${ns}
-
 done
 
 
