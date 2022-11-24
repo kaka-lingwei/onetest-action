@@ -60,6 +60,9 @@ spec:
               tag: ${VERSION}
           broker:
             image:
+              tag: ${VERSION}
+          proxy:
+            image:
               tag: ${VERSION}'
 
 echo -e "${VELA_APP_TEMPLATE}" > ./velaapp.yaml
