@@ -140,7 +140,7 @@ spec:
     - name: CODE
       value: ${TEST_CODE_GIT}
     - name: CMD
-      value: ${TEST_CMD}
+      value: ${TEST_CMD} -DALL_IP=${ALL_IP}
     - name: ALL_IP
       value: ${ALL_IP}
 '
