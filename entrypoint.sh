@@ -10,7 +10,7 @@ CHART_GIT=$7
 CHART_BRANCH=$8
 CHART_PATH=$9
 TEST_CODE_GIT=${10}
-TEST_CMD=${11}
+TEST_CMD_BASE=${11}
 
 export CHART_GIT
 export CHART_BRANCH
@@ -19,7 +19,6 @@ export REPO_NAME=`echo ${GITHUB_REPOSITORY#*/} | sed -e "s/\//-/g" | cut -c1-36 
 export WORKFLOW_NAME=${GITHUB_WORKFLOW}
 export RUN_ID=${GITHUB_RUN_ID}
 export TEST_CODE_GIT
-export TEST_CMD
 
 echo "Start test version: ${GITHUB_REPOSITORY}@${TEST_VERSION}"
 
@@ -161,10 +160,16 @@ do
 
   echo $ALL_IP
   echo $TEST_CODE_GIT
-  echo $TEST_CMD
+  echo $TEST_CMD_BASE
 
   export ALL_IP
   export ns
+  if [ -z `echo $TEST_CMD_BASE | grep "mvn"` ]; then
+      TEST_CMD="$TEST_CMD_BASE -DALL_IP=${ALL_IP}"
+  fi
+  echo $TEST_CMD
+  export TEST_CMD
+
   envsubst < ./testpod.yaml > ./testpod-${ns}.yaml
   cat ./testpod-${ns}.yaml
 
