@@ -42,7 +42,7 @@ inputs:
     description: 'test cmd'
     required: false
     default: 'mvn -B test'
-  job_id: # id of input
+  job-id: # id of input
     description: 'job id'
     required: true
     default: ''
