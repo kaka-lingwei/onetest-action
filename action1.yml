@@ -2,10 +2,6 @@
 name: 'OneTest Action'
 description: ''
 inputs:
-  action: # id of input
-    description: 'action'
-    required: true
-    default: ''
   test-version: # id of input
     description: 'test version'
     required: true
@@ -14,21 +10,29 @@ inputs:
     description: 'ask config'
     required: true
     default: ''
+  oss-ak: # id of input
+    description: 'oss ak'
+    required: true
+    default: ''
+  oss-sk: # id of input
+    description: 'oss sk'
+    required: true
+    default: ''
   docker-repo-username: # id of input
     description: 'docker repo username'
-    required: false
+    required: true
     default: ''
   docker-repo-password: # id of input
     description: 'docker repo password'
-    required: false
+    required: true
     default: ''
   chart-git: # id of input
     description: 'chart git'
-    required: false
+    required: true
     default: ''
   chart-branch: # id of input
     description: 'chart branch'
-    required: false
+    required: true
     default: ''
   chart-path: # id of input
     description: 'chart path'
@@ -36,16 +40,12 @@ inputs:
     default: './'
   test-code-git: # id of input
     description: 'test code git'
-    required: false
+    required: true
     default: ''
   test-cmd: # id of input
     description: 'test cmd'
     required: false
     default: 'mvn -B test'
-  job_id: # id of input
-    description: 'job id'
-    required: true
-    default: ''
 #outputs:
 #  pods: # id of output
 #    description: 'All pods'
@@ -53,7 +53,6 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
   args:
-    - ${{ inputs.action }}
     - ${{ inputs.test-version }}
     - ${{ inputs.ask-config }}
     - ${{ inputs.oss-ak }}
@@ -65,4 +64,3 @@ runs:
     - ${{ inputs.chart-path }}
     - ${{ inputs.test-code-git }}
     - ${{ inputs.test-cmd }}
-    - ${{ inputs.job-id }}

@@ -12,4 +12,4 @@ RUN yum install jq -y
 RUN yum install wget -y
 
 # Code file to execute when the docker container starts up (`entrypoint.sh`)
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/entry.sh"]
