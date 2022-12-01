@@ -189,6 +189,7 @@ if [ ${ACTION} == "test" ]; then
   kubectl delete pod test-${ns} -n ${ns}
 
   exit_code=`kubectl get pod test-${ns} --output="jsonpath={.status.containerStatuses[].lastState.terminated.exitCode}"`
+  echo E2E Test exit code: ${exit_code}
   exit ${exit_code}
 fi
 
