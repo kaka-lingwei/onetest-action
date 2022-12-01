@@ -125,7 +125,7 @@ spec:
     - name: onetest-regcred
   containers:
   - name: test-${ns}
-    image: cn-cicd-repo-registry.cn-hangzhou.cr.aliyuncs.com/cicd/test-runner:v0.0.3
+    image: cn-cicd-repo-registry.cn-hangzhou.cr.aliyuncs.com/cicd/test-runner:v0.0.4
     env:
     - name: CODE
       value: ${TEST_CODE_GIT}
@@ -187,6 +187,9 @@ if [ ${ACTION} == "test" ]; then
 
   kubectl logs test-${ns} -n ${ns}
   kubectl delete pod test-${ns} -n ${ns}
+
+  exit_code=`kubectl get pod test-${ns} --output="jsonpath={.status.containerStatuses[].lastState.terminated.exitCode}"`
+  exit ${exit_code}
 fi
 
 if [ ${ACTION} == "clean" ]; then
