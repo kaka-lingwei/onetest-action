@@ -56,8 +56,6 @@ runs:
     - ${{ inputs.action }}
     - ${{ inputs.test-version }}
     - ${{ inputs.ask-config }}
-    - ${{ inputs.oss-ak }}
-    - ${{ inputs.oss-sk }}
     - ${{ inputs.docker-repo-username }}
     - ${{ inputs.docker-repo-password }}
     - ${{ inputs.chart-git }}
