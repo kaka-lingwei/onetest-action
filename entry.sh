@@ -21,7 +21,7 @@ export REPO_NAME=`echo ${GITHUB_REPOSITORY#*/} | sed -e "s/\//-/g" | cut -c1-36 
 export WORKFLOW_NAME=${GITHUB_WORKFLOW}
 export RUN_ID=${GITHUB_RUN_ID}
 export TEST_CODE_GIT
-export HELM_VALUES
+export YAML_VALUES=`echo "${HELM_VALUES}" | sed -s 's/^/          /g'`
 
 echo "Start test version: ${GITHUB_REPOSITORY}@${VERSION}"
 
@@ -65,14 +65,6 @@ ${YAML_VALUES}
 
 echo -e "${VELA_APP_TEMPLATE}" > ./velaapp.yaml
 sed -i '1d' ./velaapp.yaml
-
-if [ ${ACTION} == "try" ]; then
-    export YAML_VALUES=`echo "${HELM_VALUES}" | sed -s 's/^/          /g'`
-    envsubst < ./velaapp.yaml > velaapp-f.yaml
-    echo "****************************"
-    cat velaapp-f.yaml
-    exit 0
-fi
 
 env_uuid=${REPO_NAME}-${GITHUB_RUN_ID}-${JOB_INDEX}
 
