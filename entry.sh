@@ -24,7 +24,7 @@ export TEST_CODE_GIT
 export HELM_VALUES
 
 if [ ${ACTION} == "try" ]; then
-    echo ${HELM_VALUES}
+    echo "${HELM_VALUES}"
     exit 0
 fi
 
