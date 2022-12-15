@@ -11,6 +11,7 @@ CHART_PATH=$8
 TEST_CODE_GIT=${9}
 TEST_CMD_BASE=${10}
 JOB_INDEX=${11}
+HELM_VALUES=${12}
 
 export VERSION
 export CHART_GIT
@@ -20,6 +21,12 @@ export REPO_NAME=`echo ${GITHUB_REPOSITORY#*/} | sed -e "s/\//-/g" | cut -c1-36 
 export WORKFLOW_NAME=${GITHUB_WORKFLOW}
 export RUN_ID=${GITHUB_RUN_ID}
 export TEST_CODE_GIT
+export HELM_VALUES
+
+if [ ${ACTION} == "try" ]; then
+    echo ${HELM_VALUES}
+    exit 0
+fi
 
 echo "Start test version: ${GITHUB_REPOSITORY}@${VERSION}"
 

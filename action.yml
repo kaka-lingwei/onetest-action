@@ -46,6 +46,10 @@ inputs:
     description: 'job id'
     required: true
     default: ''
+  helm-values: # id of input
+    description: 'helm values'
+    required: true
+    default: ''
 #outputs:
 #  pods: # id of output
 #    description: 'All pods'
@@ -64,3 +68,4 @@ runs:
     - ${{ inputs.test-code-git }}
     - ${{ inputs.test-cmd }}
     - ${{ inputs.job-id }}
+    - ${{ inputs.helm-values }}
