@@ -23,11 +23,6 @@ export RUN_ID=${GITHUB_RUN_ID}
 export TEST_CODE_GIT
 export HELM_VALUES
 
-if [ ${ACTION} == "try" ]; then
-    echo "${HELM_VALUES}"
-    exit 0
-fi
-
 echo "Start test version: ${GITHUB_REPOSITORY}@${VERSION}"
 
 echo "************************************"
@@ -57,6 +52,7 @@ spec:
         secretRef: \047\047
         url: ${CHART_GIT}
         values:
+${YAML_VALUES}
           nameserver:
             image:
               tag: ${VERSION}
@@ -70,6 +66,13 @@ spec:
 echo -e "${VELA_APP_TEMPLATE}" > ./velaapp.yaml
 sed -i '1d' ./velaapp.yaml
 
+if [ ${ACTION} == "try" ]; then
+    export YAML_VALUES=`echo "${HELM_VALUES}" | sed -s 's/^/          /g'`
+    envsubst < ./velaapp.yaml > velaapp-f.yaml
+    echo "****************************"
+    cat velaapp-f.yaml
+    exit 0
+fi
 
 env_uuid=${REPO_NAME}-${GITHUB_RUN_ID}-${JOB_INDEX}
 
