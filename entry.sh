@@ -227,6 +227,10 @@ if [ ${ACTION} == "clean" ]; then
     kill $PID
 fi
 
+if [ ${ACTION} == "try" ]; then
+  kubectl get pods --all-namespaces
+fi
+
 
 
 #pods=$(kubectl get pods --all-namespaces)
