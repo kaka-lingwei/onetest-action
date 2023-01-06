@@ -23,6 +23,8 @@ export REPO_NAME=`echo ${GITHUB_REPOSITORY#*/} | sed -e "s/\//-/g" | cut -c1-36 
 export WORKFLOW_NAME=${GITHUB_WORKFLOW}
 export RUN_ID=${GITHUB_RUN_ID}
 export TEST_CODE_GIT
+export TEST_CODE_BRANCH
+export TEST_CODE_PATH
 export YAML_VALUES=`echo "${HELM_VALUES}" | sed -s 's/^/          /g'`
 
 echo "Start test version: ${GITHUB_REPOSITORY}@${VERSION}"
