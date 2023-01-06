@@ -9,9 +9,11 @@ CHART_GIT=$6
 CHART_BRANCH=$7
 CHART_PATH=$8
 TEST_CODE_GIT=${9}
-TEST_CMD_BASE=${10}
-JOB_INDEX=${11}
-HELM_VALUES=${12}
+TEST_CODE_BRANCH=${10}
+TEST_CODE_PATH=${11}
+TEST_CMD_BASE=${12}
+JOB_INDEX=${13}
+HELM_VALUES=${14}
 
 export VERSION
 export CHART_GIT
@@ -131,6 +133,10 @@ spec:
     env:
     - name: CODE
       value: ${TEST_CODE_GIT}
+    - name: BRANCH
+      value: ${TEST_CODE_BRANCH}
+    - name: PATH
+      value: ${TEST_CODE_PATH}
     - name: CMD
       value: ${TEST_CMD}
     - name: ALL_IP

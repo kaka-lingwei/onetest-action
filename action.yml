@@ -38,6 +38,14 @@ inputs:
     description: 'test code git'
     required: false
     default: ''
+  test-code-branch: # id of input
+    description: 'test code branch'
+    required: false
+    default: ''
+  test-code-path: # id of input
+    description: 'test code path'
+    required: false
+    default: ''
   test-cmd: # id of input
     description: 'test cmd'
     required: false
@@ -66,6 +74,8 @@ runs:
     - ${{ inputs.chart-branch }}
     - ${{ inputs.chart-path }}
     - ${{ inputs.test-code-git }}
+    - ${{ inputs.test-code-branch }}
+    - ${{ inputs.test-code-path }}
     - ${{ inputs.test-cmd }}
     - ${{ inputs.job-id }}
     - ${{ inputs.helm-values }}
