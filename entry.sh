@@ -131,7 +131,7 @@ spec:
     - name: onetest-regcred
   containers:
   - name: test-${ns}
-    image: cn-cicd-repo-registry.cn-hangzhou.cr.aliyuncs.com/cicd/test-runner:v0.0.5
+    image: cn-cicd-repo-registry.cn-hangzhou.cr.aliyuncs.com/cicd/test-runner:v0.0.6
     env:
     - name: CODE
       value: ${TEST_CODE_GIT}
