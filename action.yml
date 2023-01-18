@@ -1,4 +1,4 @@
-# action1.yml
+# action.yml
 name: 'OneTest Action'
 description: ''
 inputs:
