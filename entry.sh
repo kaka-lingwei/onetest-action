@@ -203,6 +203,56 @@ if [ ${ACTION} == "test" ]; then
   exit ${exit_code}
 fi
 
+if [ ${ACTION} == "test_local" ]; then
+  echo "************************************"
+  echo "*        E2E Test local...         *"
+  echo "************************************"
+
+  ns=${env_uuid}
+
+  echo namespace: $ns
+  all_pod_name=`kubectl get pods --no-headers -o custom-columns=":metadata.name" -n ${ns}`
+  ALL_IP=""
+  for pod in $all_pod_name;
+  do
+      pod_port=`kubectl get -o json pod ${pod} --output="jsonpath={.spec.containers[].ports[].containerPort}" -n ${ns}`
+      for port in $pod_port;
+      do
+          kubectl port-forward ${pod} ${port}:${port} -n ${ns} &
+          res=$?
+          if [ ${res} -ne 0 ]; then
+            echo "kubectl port-forward error: ${pod} ${port}:${port}"
+            exit ${res}
+          fi
+      done
+      ALL_IP=${pod}:"127.0.0.1",${ALL_IP}
+  done
+
+  echo $ALL_IP
+  echo $TEST_CODE_GIT
+  echo $TEST_CMD_BASE
+
+  export ALL_IP
+  export ns
+  is_mvn_cmd=`echo $TEST_CMD_BASE | grep "mvn"`
+  if [ ! -z "$is_mvn_cmd" ]; then
+      TEST_CMD="$TEST_CMD_BASE -DALL_IP=${ALL_IP}"
+  else
+      TEST_CMD=$TEST_CMD_BASE
+  fi
+  echo $TEST_CMD
+
+  git clone $TEST_CODE_GIT -b $TEST_CODE_BRANCH code
+
+  cd code
+  cd $TEST_CODE_PATH
+  ${TEST_CMD}
+  exit_code=$?
+
+  killall kubectl
+  exit ${exit_code}
+fi
+
 if [ ${ACTION} == "clean" ]; then
     echo "************************************"
     echo "*       Delete app and env...      *"
